@@ -2,8 +2,7 @@ import argparse
 import logging
 import os
 import subprocess
-import shlex  # For safely splitting command lines
-import re
+import sys
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -26,48 +25,41 @@ def analyze_python(filepath, report_file, use_bandit, use_flake8, use_pylint, us
     """Analyzes Python code for implicit conversion vulnerabilities using various tools."""
     results = {}
 
+    # Each command is an argv list, never a split string: splitting a built
+    # string on whitespace turned a path containing spaces into several
+    # arguments, so the tools analysed a directory that does not exist.
+    commands = {}
     if use_bandit:
-        try:
-            command = f"bandit -r {filepath} -q -f json"
-            logging.info(f"Running Bandit: {command}")
-            process = subprocess.run(shlex.split(command), capture_output=True, text=True, check=True)
-            results['bandit'] = process.stdout
-        except subprocess.CalledProcessError as e:
-            logging.error(f"Bandit analysis failed: {e}")
-            results['bandit'] = f"Error: {e}"
-
+        commands["bandit"] = ["bandit", "-r", filepath, "-q", "-f", "json"]
     if use_flake8:
-        try:
-            command = f"flake8 {filepath}"
-            logging.info(f"Running Flake8: {command}")
-            process = subprocess.run(shlex.split(command), capture_output=True, text=True, check=True)
-            results['flake8'] = process.stdout
-        except subprocess.CalledProcessError as e:
-            logging.error(f"Flake8 analysis failed: {e}")
-            results['flake8'] = f"Error: {e}"
-
+        commands["flake8"] = ["flake8", filepath]
     if use_pylint:
-        try:
-            command = f"pylint {filepath} --output-format=json"
-            logging.info(f"Running Pylint: {command}")
-            process = subprocess.run(shlex.split(command), capture_output=True, text=True, check=True)
-            results['pylint'] = process.stdout
-        except subprocess.CalledProcessError as e:
-            logging.error(f"Pylint analysis failed: {e}")
-            results['pylint'] = f"Error: {e}"
-
+        commands["pylint"] = ["pylint", filepath, "--output-format=json"]
     if use_pyre:
+        commands["pyre"] = ["pyre", "check"]
+
+    for tool, command in commands.items():
         try:
-            # Pyre might require initialization in the project directory
-            command = "pyre check"
-            logging.info(f"Running Pyre: {command}")
-            process = subprocess.run(shlex.split(command), capture_output=True, text=True, cwd=os.path.dirname(filepath), check=True) # Run in project directory
-            results['pyre'] = process.stdout
+            logging.info(f"Running {tool}: {' '.join(command)}")
+            kwargs = {"capture_output": True, "text": True, "check": True}
+            if tool == "pyre":
+                # Pyre works on a configured project, so it runs in the
+                # directory holding the target rather than on the file.
+                kwargs["cwd"] = os.path.dirname(os.path.abspath(filepath))
+            process = subprocess.run(command, **kwargs)
+            results[tool] = process.stdout
         except subprocess.CalledProcessError as e:
-            logging.error(f"Pyre analysis failed: {e}")
-            results['pyre'] = f"Error: {e}"
+            # A linter exits non-zero when it finds something, and its
+            # findings are on stdout, so keep them instead of the bare
+            # exception text whenever the tool produced output.
+            logging.error(f"{tool} analysis failed: {e}")
+            results[tool] = e.stdout or f"Error: {e}"
+        except FileNotFoundError:
+            logging.error(f"{tool} is not installed.")
+            results[tool] = f"Error: {tool} is not installed."
 
     return results
+
 
 def analyze_javascript(filepath, report_file):
     """Analyzes JavaScript code for implicit conversion vulnerabilities.  Placeholder for future implementation."""
@@ -88,8 +80,10 @@ def save_report(report_file, results):
             for tool, result in results.items():
                 f.write(f"\n--- {tool.upper()} ---\n")
                 f.write(result)
+        return True
     except Exception as e:
         logging.error(f"Failed to save report: {e}")
+        return False
 
 
 def main():
@@ -105,7 +99,7 @@ def main():
     if not os.path.exists(filepath):
         logging.error(f"File or directory not found: {filepath}")
         print(f"Error: File or directory not found: {filepath}")  # Print to console for immediate feedback
-        return
+        sys.exit(1)
 
     if language == 'python':
         results = analyze_python(filepath, report_file, args.use_bandit, args.use_flake8, args.use_pylint, args.use_pyre)
@@ -116,7 +110,7 @@ def main():
     else:
         logging.error(f"Unsupported language: {language}")
         print(f"Error: Unsupported language: {language}")
-        return
+        sys.exit(1)
 
     # Print results to console
     print("\nAnalysis Results:")
@@ -126,23 +120,11 @@ def main():
 
 
     if report_file:
-        save_report(report_file, results)
-        print(f"\nReport saved to: {report_file}")
+        if save_report(report_file, results):
+            print(f"\nReport saved to: {report_file}")
+        else:
+            sys.exit(1)
 
 
 if __name__ == "__main__":
     main()
-
-# Usage Examples:
-
-# 1. Analyze a Python file using Bandit and save the report:
-# python main.py my_python_file.py --use-bandit --report-file bandit_report.txt
-
-# 2. Analyze a Python directory using Bandit, Flake8, and Pylint:
-# python main.py my_python_directory --use-bandit --use-flake8 --use-pylint
-
-# 3. Analyze a JavaScript file (note: JavaScript analysis is a placeholder):
-# python main.py my_javascript_file.js --language javascript
-
-# 4.  Analyze a PHP file and save results
-# python main.py my_php_file.php --language php --report-file php_report.txt
