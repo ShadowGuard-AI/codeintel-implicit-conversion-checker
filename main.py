@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def setup_argparse():
     """Sets up the argument parser for the CLI."""
-    parser = argparse.ArgumentParser(description="Identifies potential security vulnerabilities arising from implicit type conversions.")
+    parser = argparse.ArgumentParser(description="Runs bandit, flake8, pylint, or pyre on Python files when flagged. No implicit type conversion specific check is performed, and JavaScript and PHP analysis is not implemented.")
     parser.add_argument("filepath", help="Path to the file or directory to analyze.")
     parser.add_argument("--language", choices=['javascript', 'php', 'python'], default='python',
                         help="The programming language of the file(s) being analyzed.  Defaults to 'python'.")
@@ -102,11 +102,19 @@ def main():
         sys.exit(1)
 
     if language == 'python':
+        if not (args.use_bandit or args.use_flake8 or args.use_pylint or args.use_pyre):
+            logging.error("No tool was selected. Pass --use-bandit, --use-flake8, --use-pylint, or --use-pyre.")
+            print("Error: No tool was selected. Pass --use-bandit, --use-flake8, --use-pylint, or --use-pyre.")
+            sys.exit(1)
         results = analyze_python(filepath, report_file, args.use_bandit, args.use_flake8, args.use_pylint, args.use_pyre)
     elif language == 'javascript':
-        results = analyze_javascript(filepath, report_file)
+        logging.error("JavaScript analysis is not implemented.")
+        print("Error: JavaScript analysis is not implemented.")
+        sys.exit(1)
     elif language == 'php':
-        results = analyze_php(filepath, report_file)
+        logging.error("PHP analysis is not implemented.")
+        print("Error: PHP analysis is not implemented.")
+        sys.exit(1)
     else:
         logging.error(f"Unsupported language: {language}")
         print(f"Error: Unsupported language: {language}")

@@ -1,1 +1,6 @@
-`shlex` is part of Python's standard library and doesn't require separate installation.  Therefore, it should not be included in a `requirements.txt` file.
+# main.py itself uses only the standard library. The packages below are
+# the external tools it invokes only when the matching flag is passed.
+bandit>=1.0.0
+flake8>=1.0.0
+pylint>=1.0.0
+pyre-check>=1.0.0
