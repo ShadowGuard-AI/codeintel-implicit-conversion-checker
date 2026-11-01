@@ -21,6 +21,9 @@ def setup_argparse():
 
     return parser
 
+# I take report_file here and never use it. Saving happens in
+# main from the returned dict, so this parameter exists only
+# because the three language functions share a shape.
 def analyze_python(filepath, report_file, use_bandit, use_flake8, use_pylint, use_pyre):
     """Analyzes Python code for implicit conversion vulnerabilities using various tools."""
     results = {}
@@ -45,6 +48,10 @@ def analyze_python(filepath, report_file, use_bandit, use_flake8, use_pylint, us
             if tool == "pyre":
                 # Pyre works on a configured project, so it runs in the
                 # directory holding the target rather than on the file.
+                # I run pyre in the target's directory even when the target is
+                # itself a directory, which puts pyre in the parent. That is a
+                # known rough edge: pyre then checks whatever project the
+                # parent holds, not necessarily the one named.
                 kwargs["cwd"] = os.path.dirname(os.path.abspath(filepath))
             process = subprocess.run(command, **kwargs)
             results[tool] = process.stdout
@@ -106,6 +113,9 @@ def main():
             logging.error("No tool was selected. Pass --use-bandit, --use-flake8, --use-pylint, or --use-pyre.")
             print("Error: No tool was selected. Pass --use-bandit, --use-flake8, --use-pylint, or --use-pyre.")
             sys.exit(1)
+        # Only the Python branch reaches this line. The JavaScript and
+        # PHP branches above exit 1 in main, so their placeholder
+        # functions in this file are never called from the CLI at all.
         results = analyze_python(filepath, report_file, args.use_bandit, args.use_flake8, args.use_pylint, args.use_pyre)
     elif language == 'javascript':
         logging.error("JavaScript analysis is not implemented.")
