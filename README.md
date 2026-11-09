@@ -1,11 +1,11 @@
-![Noon at the test ground: the siren head large in the foreground with its horns in a ring, the shed with its vane behind it, the rain gauge on its post and a wind sock hanging slack, flat fields and low cloud beyond, no words anywhere](intro-banner.png)
+![Plain backed notes passing under the brass grille close up, the clerk's fingers at the far side and a tray of stacked coins beside the window](intro-banner.png)
 
 
 # codeintel-Implicit-Conversion-Checker
 
-![The county test ground at noon: the siren fixed on its pole and pad in the foreground, the shed with its vane and its door board carrying the name codeintel-implicit-conversion-checker in jade on cloud cream, the rain gauge with marks only, and flat fields under low cloud](banner.png)
+![A border station exchange bureau where the clerk stacks coins in a tray behind the brass grille, a traveller's hand resting on a stack of plain backed notes on the counter, green shaded lamps above and a waiting bench behind](banner.png)
 
-![One tornado siren seen from below: a ring of horn mouths in monsoon jade, the motor housing beneath, a slate pole bolted to a cloud cream pad with brass bolts, and the name in Beiruti in slate on cloud cream below the pad, the heading plate](logo.png)
+![A rendered emblem of a brass grille exchange window in a dark wood surround, a green shaded lamp above it and a small stack of plain unmarked coins on the counter ledge below](logo.png)
 
 ![The noon test in three depths: the cloud band crosses once and holds, the siren head turns on its pole while the vane swings and the sock lifts and falls and the gauge stays unchanged, and the door board and log sheet stay still](scene.svg)
 
