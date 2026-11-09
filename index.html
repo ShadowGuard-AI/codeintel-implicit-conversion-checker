@@ -3,97 +3,99 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>codeintel-implicit-conversion-checker: No Conversion Check of Its Own</title>
-<meta name="description" content="A wrapper that runs bandit, flake8, pylint, or pyre on Python files when the matching flag is passed. It performs no implicit type conversion specific check.">
+<title>codeintel-implicit-conversion-checker: The Exchange Bureau</title>
 <style>
-@font-face{font-family:'Beiruti';src:url('fonts/Beiruti.ttf') format('truetype');}
-@font-face{font-family:'Barlow';src:url('fonts/Barlow.ttf') format('truetype');}
-:root{--cream:#f4eed6;--slate:#46505c;--jade:#205c48;--brass:#b08c3c;--ink:#22261f}
-*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:'Barlow',sans-serif;line-height:1.6}
-h1,h2,h3{font-family:'Beiruti',sans-serif;color:var(--slate);font-weight:600}
-.hero img.heroimg{width:100%;height:52vh;object-fit:cover;display:block}
-.hero .in,main,footer{max-width:1120px;margin:0 auto;padding:1rem 6vw 2rem}.logo{width:230px;background:var(--cream)}
-nav{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0}
-.btn{display:inline-block;text-decoration:none;font-family:'Beiruti',sans-serif;font-size:1.15rem;color:var(--slate);background:#fff;border:1px solid var(--slate);padding:.7rem 1.3rem;position:relative}
-.btn::before{content:'';display:inline-block;width:12px;height:12px;margin-right:.6em;border:2px solid var(--brass);vertical-align:-1px}
-.btn:hover::before{background:rgba(176,140,60,.5)}
-.btn:active::before{background:var(--brass)}
-.btn:focus-visible{outline:3px double var(--slate);outline-offset:3px}
-a{color:var(--jade)}a::before{content:'';display:inline-block;width:0;height:0;margin-right:.45em;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid var(--slate);vertical-align:0}
-.btn::before{content:''}
-.plate{background:#fff;border:1px solid var(--slate);border-left:12px solid var(--jade);padding:.4rem 1.5rem 1.3rem;margin:1.8rem 0}
-pre{background:var(--cream);color:var(--ink);padding:1rem;overflow-x:auto;border-left:4px solid var(--brass)}
-.mast{height:22px;margin:1.4rem 0;border-top:2px solid var(--slate);position:relative}
-.mast::after{content:'';position:absolute;left:50%;top:0;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:15px solid var(--slate)}
-.callout{background:#f8f2dc;border:1px solid var(--brass);padding:.2rem 1.3rem 1rem;margin:1.3rem 0}
-.entry{display:flex;gap:1rem;padding:.5rem 0;border-bottom:1px solid rgba(34,38,31,.16)}
-.entry b{font-family:'Beiruti',sans-serif;min-width:150px;font-size:1.1rem;color:var(--slate)}
-.tick{color:var(--brass);font-weight:700}
-.slot{border-top:2px solid var(--slate);margin-top:1rem;padding-top:.5rem}
+@font-face { font-family: "Girassol"; src: url("fonts/Girassol-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Zen Maru Gothic"; src: url("fonts/ZenMaruGothic-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Zen Maru Gothic"; src: url("fonts/ZenMaruGothic-700.woff2") format("woff2"); font-weight: 700; }
+:root {
+  --paper: #f6f3ea; --cream: #eae5d3; --ink: #232720; --soft: #5f6257;
+  --accent: #2e5d43; --deep: #8a6d1f; --line: #d4cdb4; --card: #ffffff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--cream); color: var(--ink); font-family: "Zen Maru Gothic", sans-serif; line-height: 1.55; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 20px 64px; }
+header.hero { text-align: center; padding: 52px 0 8px; }
+img.hero-logo { width: min(430px, 82vw); border-radius: 10px; box-shadow: 0 10px 34px rgba(40,48,36,.22); }
+h1, h2 { font-family: "Girassol", sans-serif; line-height: 1.15; font-weight: 400; }
+h1 { font-size: clamp(26px, 5vw, 44px); margin: 26px 0 6px; }
+.tagline { color: var(--soft); font-size: 19px; margin: 0 auto; max-width: 680px; }
+.btns { margin: 22px 0 6px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+a.btn { font-family: "Girassol", sans-serif; text-decoration: none; padding: 11px 22px; border-radius: 999px; border: 2px solid var(--accent); color: var(--accent); background: transparent; }
+a.btn.solid { background: var(--deep); border-color: var(--deep); color: #fff; }
+figure { margin: 30px 0; }
+figure img { width: 100%; border-radius: 10px; display: block; box-shadow: 0 8px 28px rgba(40,48,36,.22); }
+figcaption { color: var(--soft); font-size: 15px; text-align: center; margin-top: 9px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 34px 0; }
+.fact { background: var(--card); border: 1px solid var(--line); border-top: 5px solid var(--accent); border-radius: 8px; padding: 14px 16px; }
+.fact b { display: block; font-family: "Girassol", sans-serif; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+section { margin: 38px 0; }
+h2 { font-size: 27px; margin: 0 0 12px; border-bottom: 2px solid var(--line); padding-bottom: 7px; }
+code, pre { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+pre { background: #20261f; color: #edf0e4; padding: 15px 18px; border-radius: 8px; overflow-x: auto; font-size: 14.5px; }
+table { border-collapse: collapse; width: 100%; background: var(--card); }
+th, td { border: 1px solid var(--line); padding: 9px 12px; text-align: left; vertical-align: top; }
+th { font-family: "Girassol", sans-serif; background: var(--cream); }
+.hold { background: #eef2e4; border: 1px solid #c9d4ae; border-left: 6px solid var(--accent); border-radius: 8px; padding: 16px 20px; }
+.hold h2 { border: none; padding: 0; }
+.hold ul { margin: 8px 0 4px; padding-left: 20px; }
+footer { margin-top: 52px; border-top: 2px solid var(--line); padding-top: 16px; color: var(--soft); font-size: 14.5px; text-align: center; }
 </style>
 </head>
 <body>
+<div class="wrap">
 <header class="hero">
-<img class="heroimg" src="assets/intro-banner.png" alt="Noon at the test ground: the siren head large with its horns in a ring, the shed and vane behind it, the gauge on its post and a slack wind sock, no words anywhere">
-<div class="in">
-<img class="logo" src="assets/logo.png" alt="One tornado siren seen from below: a ring of horn mouths, the motor housing beneath, a slate pole bolted to a cloud cream pad, and the name in Beiruti in slate below the pad">
-<h1>codeintel-implicit-conversion-checker</h1>
-<p>Test log sheet. 12:00. Siren on its pole. Each entry short, each gap ticked where the log leaves it.</p>
-<nav>
-<a class="btn" href="#run">Run the Flagged Tool</a>
-<a class="btn" href="#flags">Use Bandit</a>
-<a class="btn" href="#flags">Use Flake8</a>
-<a class="btn" href="#flags">Use Pylint</a>
-<a class="btn" href="#flags">Use Pyre</a>
-<a class="btn" href="#flags">Show Help</a>
-</nav>
-</div>
+  <img class="hero-logo" src="assets/logo.png" alt="A rendered emblem of a brass grille exchange window in a dark wood surround, a green shaded lamp above it and a small stack of plain unmarked coins on the counter ledge below">
+  <h1>codeintel-implicit-conversion-checker</h1>
+  <p class="tagline">The Exchange Bureau. A wrapper that runs whichever of four external analyzers you flag over one file or directory, and prints what they report, in sections.</p>
+  <div class="btns">
+    <a class="btn solid" href="https://github.com/ShadowGuard-AI/codeintel-implicit-conversion-checker">The repository</a>
+    <a class="btn" href="https://github.com/ShadowGuard-AI/codeintel-implicit-conversion-checker/blob/main/main.py">main.py</a>
+  </div>
 </header>
-<main>
-<section class="plate"><h2>No Conversion Check of Its Own</h2>
-<p>A wrapper. It runs bandit, flake8, pylint, or pyre on Python files when the matching flag is passed.</p>
-<p>It performs no implicit type conversion specific check.</p>
-<p>JavaScript and PHP analysis is not implemented.</p>
-<p>Neither line is softened on this page. They govern the whole log.</p>
+<figure>
+  <img src="assets/intro-banner.png" alt="Plain backed notes passing under the brass grille close up, the clerk's fingers at the far side and a tray of stacked coins beside the window">
+  <figcaption>Notes under the grille, coins in the tray: what crosses the counter is the work of other hands.</figcaption>
+</figure>
+
+<div class="facts">
+  <div class="fact"><b>A wrapper</b>Bandit, flake8, pylint, and pyre are started as argument lists over the target, each selected by its own flag</div>
+  <div class="fact"><b>No flag, no run</b>Running with no tool flag stops at exit 1, as does a path that does not exist</div>
+  <div class="fact"><b>Findings kept</b>A linter’s non zero exit keeps the findings on its stdout in place of a bare error</div>
+  <div class="fact"><b>Pyre stands apart</b>Pyre check runs in the directory holding the target’s parent, so a directory target puts it in the parent project</div>
+</div>
+<section>
+  <h2>Usage</h2>
+  <pre>python3 main.py FILEPATH [--language python] [--use-bandit] [--use-flake8] [--use-pylint] [--use-pyre] [--report-file FILE]</pre>
+  <p>The README usage line is a placeholder naming neither target nor flag; the real invocation is the one above. Bandit runs recursively with JSON output, pylint with JSON output, and flake8 plainly. Results are printed section by section and saved when a report file is named.</p>
+<table>
+    <tr><th>Option</th><th>What it does</th></tr>
+    <tr><td><code>filepath</code></td><td>The file or directory to hand to the selected tools. Required. The README parameter list omits it; the code requires it.</td></tr>
+    <tr><td><code>--language</code></td><td>Default python. The README list gives this No description provided; the help text in main.py describes it.</td></tr>
+    <tr><td><code>--use-bandit</code> / <code>--use-flake8</code></td><td>Select bandit or flake8 for this run.</td></tr>
+    <tr><td><code>--use-pylint</code> / <code>--use-pyre</code></td><td>Select pylint or pyre for this run.</td></tr>
+    <tr><td><code>--report-file</code></td><td>Save the sectioned results to a file.</td></tr>
+  </table>
 </section>
-<div class="mast"></div>
-<section class="plate"><h2>Entry Two. Obtaining the Tool</h2>
-<pre>git clone https://github.com/ShadowStrikeHQ/codeintel-implicit-conversion-checker</pre>
-<div class="callout"><h3>Flagged in Place</h3><p>The line names ShadowStrikeHQ, not ShadowGuard-AI. Quoted as found. Not corrected in place.</p></div>
-<p>Note: the README gives no further step after the clone.</p>
+<figure>
+  <img src="assets/banner.png" alt="A border station exchange bureau where the clerk stacks coins in a tray behind the brass grille, a traveller's hand resting on a stack of plain backed notes on the counter, green shaded lamps above and a waiting bench behind">
+  <figcaption>The bureau at work: the changing is done by the house, on its own instruments.</figcaption>
+</figure>
+<section class="hold">
+  <h2>The name promises an act the code does not perform</h2>
+  <ul>
+    <li>No implicit type conversion specific check is performed. That sentence is the parser’s own description in main.py, and this site repeats it plainly: conversion is the act in the theme’s picture, not an act of the code.</li>
+    <li>JavaScript and PHP analysis is not implemented. Choosing either language stops the run at exit 1 in main, so the placeholder functions for those languages are never reached from the command line at all.</li>
+    <li>What the tool reports is what the four external analyzers report; it adds no check of its own over their output.</li>
+  </ul>
 </section>
-<div class="mast"></div>
-<section class="plate" id="run"><h2>Entry Three. Running the Tool</h2>
-<pre>./codeintel-implicit-conversion-checker [params]</pre>
-<div class="callout"><h3>The README Names No Target</h3><p>Placeholder line. No target named. No flag shown. Code fact, marked as a code fact and not as README text: the code requires a positional filepath, a file or directory path. A reader using the README alone would not learn this.</p></div>
+<section>
+  <h2>Requirements</h2>
+  <p>Python, plus the four external analyzers listed in the requirements file (bandit, flake8, pylint, and pyre-check, each 1.0.0 or later), each invoked only when its flag is passed.</p>
 </section>
-<div class="mast"></div>
-<section class="plate" id="flags"><h2>Three Flags the README Leaves Blank</h2>
-<div class="entry"><b>-h</b><span>Shows a help message and exits.</span></div>
-<div class="entry"><b>--language <span class="tick">[brass tick]</span></b><span>README: No description provided. Code fact: choices are javascript, php, python; default is python.</span></div>
-<div class="entry"><b>--report-file <span class="tick">[brass tick]</span></b><span>README: No description provided. Code fact: path to save the report to, optional.</span></div>
-<div class="entry"><b>--use-bandit</b><span>Use Bandit for Python analysis.</span></div>
-<div class="entry"><b>--use-flake8</b><span>Use Flake8 for Python analysis.</span></div>
-<div class="entry"><b>--use-pylint</b><span>Use Pylint for Python analysis.</span></div>
-<div class="entry"><b>--use-pyre <span class="tick">[brass tick]</span></b><span>README: No description provided. Code fact: use Pyre-check for Python analysis, requires setup.</span></div>
-<div class="slot">Gauge slot: the three undescribed flags carry brass ticks. The gap belongs to the README. Recorded, not hidden.</div>
-</section>
-<div class="mast"></div>
-<section class="plate"><h2>A Tool Must Be Flagged or the Run Stops</h2>
-<p>No tool flag passed: run stops, error printed, exit 1. Path not found: run stops, error printed, exit 1.</p>
-<div class="callout"><h3>JavaScript and PHP Stop the Run</h3><p>Language set to javascript: run stops, exit 1. Same for php. Placeholder functions for those languages exist in the file. The command line never reaches them.</p></div>
-<h2>Pyre Runs in the Holding Folder</h2>
-<p>Pyre runs as pyre check, inside the folder holding the target. Where the target is itself a folder, pyre then runs in the parent folder. The wrong project may be checked. Recorded as a known rough edge from the code comments.</p>
-<p>Tool missing: the result reads Error: the tool is not installed, with the wording varying by tool name only. A tool that exits non-zero keeps its stdout as its result. Findings are not thrown away.</p>
-<p><a href="https://github.com/ShadowGuard-AI/codeintel-implicit-conversion-checker">The repository on GitHub</a></p>
-<h2>Licence, the Closing Entry</h2>
-<pre>Copyright (c) ShadowStrikeHQ</pre>
-<p>The licence line as printed, flagged beside entry two. No licence name is given. None is invented.</p>
-</section>
-</main>
 <footer>
-<img src="assets/banner.png" alt="The county test ground at noon: the siren fixed in the foreground, the shed door board carrying the name, the gauge with marks only" style="width:100%">
-<p>codeintel-implicit-conversion-checker. Test ends. Siren winds down. Pole stays. Pad stays. Log sheet signed off with no warning issued.</p>
+<p>The README of codeintel-implicit-conversion-checker names the stale ShadowStrikeHQ org in its clone URL and closes with a copyright line naming the same org; the repository carries a separate LICENSE file headed MIT License. Both are preserved exactly as printed. Site type is set in Girassol and Zen Maru Gothic, self-hosted under the SIL Open Font License.</p>
 </footer>
+</div>
 </body>
 </html>
